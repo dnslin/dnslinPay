@@ -91,9 +91,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.1991wangliang</groupId>
-            <artifactId>alipay-sdk</artifactId>
-            <version>RELEASE</version>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.10.170.ALL</version>
         </dependency>
     </dependencies>
 </project>
