@@ -79,8 +79,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
-
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.10.7</version>
+        </dependency>
         <dependency>
             <groupId>com.dnslin</groupId>
             <artifactId>dnslinUtils</artifactId>
