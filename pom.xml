@@ -89,5 +89,11 @@
             <artifactId>dnslinUtils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.1991wangliang</groupId>
+            <artifactId>alipay-sdk</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 </project>
