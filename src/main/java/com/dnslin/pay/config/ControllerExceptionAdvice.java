@@ -2,9 +2,10 @@ package com.dnslin.pay.config;
 
 
 
-import com.dnslin.cs2021_hub.common.exception.AppException;
-import com.dnslin.cs2021_hub.common.result.R;
-import com.dnslin.cs2021_hub.common.result.ResponseEnum;
+
+import com.dnslin.pay.exception.AppException;
+import com.dnslin.pay.result.R;
+import com.dnslin.pay.result.ResponseEnum;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
