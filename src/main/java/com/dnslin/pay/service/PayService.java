@@ -25,8 +25,7 @@ public class PayService {
 
   @Autowired private AlipayConfig alipayConfig;
 
-  public void createOrder(GoodsDTO goodsDTO)
-      throws AlipayApiException {
+  public String createOrder(GoodsDTO goodsDTO) throws AlipayApiException {
     AlipayClient alipayClient =
         new DefaultAlipayClient(
             alipayConfig.getServerUrl(),
@@ -36,6 +35,19 @@ public class PayService {
             AlipayConfig.CHARSET,
             alipayConfig.getAlipayPublicKey(),
             AlipayConfig.SIGN_TYPE);
+    AlipayTradePrecreateRequest request = getAlipayTradePrecreateRequest(goodsDTO);
+    AlipayTradePrecreateResponse response = alipayClient.execute(request);
+    if (response.isSuccess()) {
+      log.info("调用成功");
+    } else {
+      throw new AppException(response.getCode(), response.getMsg());
+    }
+    AlipayDto alipayDto = JSON.parseObject(response.getBody(), AlipayDto.class);
+    return "https://api.qrserver.com/v1/create-qr-code/?size=150×150&data="
+        + alipayDto.getAlipayTradePrecreateResponse().getQrCode();
+  }
+
+  private AlipayTradePrecreateRequest getAlipayTradePrecreateRequest(GoodsDTO goodsDTO) {
     AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
     request.setNotifyUrl("");
     JSONObject bizContent = new JSONObject();
@@ -43,12 +55,12 @@ public class PayService {
     bizContent.put("total_amount", goodsDTO.getPrice());
     bizContent.put("subject", goodsDTO.getGoodName());
 
-    //商品明细信息，按需传入
+    // 商品明细信息，按需传入
     JSONArray goodsDetail = new JSONArray();
     JSONObject goods = new JSONObject();
     goods.put("goods_id", goodsDTO.getGoodId());
     goods.put("goods_name", goodsDTO.getGoodName());
-    goods.put("quantity",  goodsDTO.getQuantity());
+    goods.put("quantity", goodsDTO.getQuantity());
     goods.put("price", goodsDTO.getPrice());
     goodsDetail.add(goods);
     bizContent.put("goods_detail", goodsDetail);
@@ -64,14 +76,6 @@ public class PayService {
     bizContent.put("promo_params", promoParams);
 
     request.setBizContent(bizContent.toString());
-    AlipayTradePrecreateResponse response = alipayClient.execute(request);
-    if (response.isSuccess()) {
-      System.out.println("调用成功");
-    } else {
-      throw new AppException(response.getCode(),response.getMsg());
-    }
-    AlipayDto alipayDto = JSON.parseObject(response.getBody(), AlipayDto.class);
-    String payUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150×150&data="+alipayDto.getAlipayTradePrecreateResponse().getQrCode();
-    System.out.println(payUrl);
+    return request;
   }
 }
