@@ -1,74 +1,84 @@
 package com.dnslin.pay.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipayTradePagePayRequest;
+
+import com.alipay.api.request.AlipayTradePrecreateRequest;
+import com.alipay.api.response.AlipayTradePrecreateResponse;
+
 import com.dnslin.pay.config.AlipayConfig;
-import org.springframework.beans.BeanUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-
+@Slf4j
 @Service
 public class PayService {
-//    @Resource(name = "JdkRedisTemplate")
-//    private RedisTemplate redisTemplate;
-    public String creatAlipayOrder(String orderid,String orderprice,String orderdesc) throws AlipayApiException {
-        //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.gatewayUrl, AlipayConfig.app_id, AlipayConfig.merchant_private_key, "json", AlipayConfig.charset, AlipayConfig.alipay_public_key, AlipayConfig.sign_type);
 
-        //设置请求参数
-        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-        alipayRequest.setReturnUrl(AlipayConfig.return_url);
-        alipayRequest.setNotifyUrl(AlipayConfig.notify_url);
+  @Autowired private AlipayConfig alipayConfig;
 
-        //商户订单号，商户网站订单系统中唯一订单号，必填
-        String out_trade_no = orderid;
-        //付款金额，必填
-        String total_amount = orderprice;
-        //订单名称，必填
-        String subject = "秒杀订单";
-        //商品描述，可空
-        String body = orderdesc;
+  public void createOrder(String outTradeNo, Integer price, String goodName)
+      throws AlipayApiException {
+    AlipayClient alipayClient =
+        new DefaultAlipayClient(
+            alipayConfig.getServerUrl(),
+            alipayConfig.getAppId(),
+            alipayConfig.getPrivateKey(),
+            AlipayConfig.FORMAT,
+            AlipayConfig.CHARSET,
+            alipayConfig.getAlipayPublicKey(),
+            AlipayConfig.SIGN_TYPE);
+    AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
+    request.setNotifyUrl("");
+    JSONObject bizContent = new JSONObject();
+    bizContent.put("out_trade_no", "outTradeNo");
+    bizContent.put("total_amount", 0.01);
+    bizContent.put("subject", "goodName");
 
-        alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\","
-                + "\"total_amount\":\""+ total_amount +"\","
-                + "\"subject\":\""+ subject +"\","
-                + "\"body\":\""+ body +"\","
-                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+    //// 商品明细信息，按需传入
+    JSONArray goodsDetail = new JSONArray();
+    JSONObject goods1 = new JSONObject();
+    goods1.put("goods_id", "goodsNo1");
+    goods1.put("goods_name", "子商品1");
+    goods1.put("quantity", 1);
+    goods1.put("price", 0.01);
+    goodsDetail.add(goods1);
+    bizContent.put("goods_detail", goodsDetail);
 
-        //若想给BizContent增加其他可选请求参数，以增加自定义超时时间参数timeout_express来举例说明
-        //alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\","
-        //		+ "\"total_amount\":\""+ total_amount +"\","
-        //		+ "\"subject\":\""+ subject +"\","
-        //		+ "\"body\":\""+ body +"\","
-        //		+ "\"timeout_express\":\"10m\","
-        //		+ "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
-        //请求参数可查阅【电脑网站支付的API文档-alipay.trade.page.pay-请求参数】章节
+    // 扩展信息，按需传入
+    JSONObject extendParams = new JSONObject();
+    extendParams.put("sys_service_provider_id", "2088511833207846");
+    bizContent.put("extend_params", extendParams);
 
-        //请求
-        String result = alipayClient.pageExecute(alipayRequest).getBody();
+    // 结算信息，按需传入
+    JSONObject settleInfo = new JSONObject();
+    JSONArray settleDetailInfos = new JSONArray();
+    JSONObject settleDetail = new JSONObject();
+    settleDetail.put("trans_in_type", "defaultSettle");
+    settleDetail.put("amount", 0.01);
+    settleDetailInfos.add(settleDetail);
+    settleInfo.put("settle_detail_infos", settleDetailInfos);
+    bizContent.put("settle_info", settleInfo);
 
-        return result;
+    // 业务参数信息，按需传入
+    JSONObject businessParams = new JSONObject();
+    businessParams.put("busi_params_key", "busiParamsValue");
+    bizContent.put("business_params", businessParams);
+
+    // 营销信息，按需传入
+    JSONObject promoParams = new JSONObject();
+    promoParams.put("promo_params_key", "promoParamsValue");
+    bizContent.put("promo_params", promoParams);
+
+    request.setBizContent(bizContent.toString());
+    AlipayTradePrecreateResponse response = alipayClient.execute(request);
+    if (response.isSuccess()) {
+      System.out.println("调用成功");
+    } else {
+      System.out.println("调用失败");
     }
-
-    /*public String updateOrder(String orderid){
-        System.out.println(orderid+"orderid");
-        Object o = redisTemplate.opsForHash().get("today_orders", orderid);
-        TbSeckillOrder order = new TbSeckillOrder();
-        BeanUtils.copyProperties(o,order);
-        // 解决消息重复消费问题
-
-        if(order.getStatus().equals("1")==false){
-            return "success";
-        }
-        order.setStatus("2");
-        redisTemplate.opsForHash().put("today_orders",orderid,order);
-        Object os = redisTemplate.opsForHash().get("today_orders", orderid);
-        TbSeckillOrder orders = new TbSeckillOrder();
-        BeanUtils.copyProperties(os,orders);
-        System.out.println(orders+"----------****");
-        return "success";
-    }*/
+  }
 }
