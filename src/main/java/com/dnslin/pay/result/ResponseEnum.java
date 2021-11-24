@@ -33,8 +33,7 @@ public enum ResponseEnum {
     FOR_TIMEOUT("407","抢购超时"),
     insufficient_Activation_Code("408","激活码不足,请联系管理员"),
     NUMBER_LESS_THAN("409","助力次数用完了"),
-    HAVE_POWER("501","你已经助力过了")
-    ;
+    HAVE_POWER("501","你已经助力过了");
 
 
     private String code;

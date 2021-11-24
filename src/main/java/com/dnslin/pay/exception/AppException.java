@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class AppException extends RuntimeException{
 
@@ -23,5 +22,9 @@ public class AppException extends RuntimeException{
     public AppException(ResponseEnum responseEnum){
         this.code = responseEnum.getCode();
         this.message = responseEnum.getMessage();
+    }
+    public AppException(String code,String message){
+        this.code = code;
+        this.message = message;
     }
 }

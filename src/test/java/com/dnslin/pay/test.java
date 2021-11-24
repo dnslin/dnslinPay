@@ -4,6 +4,7 @@ package com.dnslin.pay;
  * @date: 2021/11/24 21:56
  */
 import com.alipay.api.AlipayApiException;
+import com.dnslin.pay.model.GoodsDTO;
 import com.dnslin.pay.service.PayService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 /**
  * @author: DnsLin @Title: test @ProjectName: dnslinPay @Description:
@@ -26,6 +28,8 @@ public class test {
 
   @Test
   public void test() throws AlipayApiException {
-    pay.createOrder(null, null, null);
+    GoodsDTO goodsDTO = new GoodsDTO().builder().goodId("dsl123456").goodName("CPU").outTradeNo("DSL123456").price(BigDecimal.ONE).quantity(5).build();
+
+    pay.createOrder(goodsDTO);
   }
 }
