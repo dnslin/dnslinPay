@@ -6,6 +6,13 @@ logging:
         onemanager:
     com.dnslin.pay: debug
 
+pay:
+  alipay:
+    appId: "*******"
+    privateKey: "*******************"
+    alipayPublicKey: "******"
+    notifyUrl: "https://baidu.com"
+    serverUrl: "https://openapi.alipay.com/gateway.do"
 
 
 server:
