@@ -6,10 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
-
 import com.dnslin.pay.config.AlipayConfig;
 import com.dnslin.pay.exception.AppException;
 import com.dnslin.pay.model.AlipayDto;
@@ -27,6 +25,15 @@ public class PayService {
   private final static String DISCOUNT = "10";
 
   private final static String SYSTEMSERVICEPROVIDER= "2088511833207846";
+
+  /**
+  *
+   * @Description: 发送订单请求
+   * @param: goodsDTO
+   * @return String
+   * @author DnsLin
+   * @date 2021/11/26 22:58
+  */
   public String createOrder(GoodsDto goodsDTO)  {
     if (goodsDTO != null){
       throw new AppException("400", "订单信息为空");
