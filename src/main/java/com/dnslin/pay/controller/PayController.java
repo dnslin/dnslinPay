@@ -1,5 +1,6 @@
 package com.dnslin.pay.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.dnslin.pay.model.GoodsDto;
 import com.dnslin.pay.result.R;
 import com.dnslin.pay.result.ResponseEnum;
@@ -18,6 +19,7 @@ public class PayController {
   @PostMapping("/pay")
   /**
    * @Description: 订单接口
+   *
    * @param:
    * @return com.dnslin.pay.result.R
    * @author DnsLin
@@ -25,11 +27,16 @@ public class PayController {
    */
   public R payDmf(@RequestBody GoodsDto goodsDto) {
     log.info("===进入pay接口===");
+    goodsDto.setGoodName("CPU");
+    goodsDto.setOutTradeNo(RandomUtil.randomString(10));
+    goodsDto.setGoodId(RandomUtil.randomString(5));
+    goodsDto.setQuantity(5);
     String url = "";
+    log.info("订单实体类-->{}", goodsDto);
     if (goodsDto != null) {
       url = service.createOrder(goodsDto);
     } else {
-      log.error("订单实体类-->{}",goodsDto);
+      log.error("订单实体类-->{}", goodsDto);
       return new R("订单信息为空", null);
     }
     return new R(ResponseEnum.SUCCESS, url);

@@ -3,6 +3,8 @@ package com.dnslin.pay;
  * @author: DnsLin @Title: test @ProjectName: dnslinPay @Description:
  * @date: 2021/11/24 21:56
  */
+
+import cn.hutool.core.util.NumberUtil;
 import com.alipay.api.AlipayApiException;
 import com.dnslin.pay.model.GoodsDto;
 import com.dnslin.pay.service.PayService;
@@ -29,5 +31,9 @@ public class test {
     GoodsDto goodsDTO = new GoodsDto().builder().goodId("dsl123456").goodName("CPU").outTradeNo("DSL123456").price(BigDecimal.ONE).quantity(5).build();
 
     pay.createOrder(goodsDTO);
+  }
+  @Test
+  public void test02(){
+    System.out.println(NumberUtil.generateRandomNumber(10, 100000, 3).toString());
   }
 }
