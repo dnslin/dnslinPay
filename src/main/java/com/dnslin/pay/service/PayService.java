@@ -24,7 +24,7 @@ public class PayService {
 
   private final static String DISCOUNT = "10";
 
-  private final static String SYSTEMSERVICEPROVIDER= "2088511833207846";
+  private final static String SYSTEMS_CREVICE_PROVIDER = "2088511833207846";
 
   /**
   *
@@ -38,6 +38,7 @@ public class PayService {
     if (goodsDTO != null){
       throw new AppException("400", "订单信息为空");
     }
+    // 创建支付宝请求客户端
     AlipayClient alipayClient =
         new DefaultAlipayClient(
             alipayConfig.getServerUrl(),
@@ -61,8 +62,12 @@ public class PayService {
       throw new AppException(response.getCode(), response.getMsg());
     }
     AlipayDto alipayDto = JSON.parseObject(response.getBody(), AlipayDto.class);
-    return "https://api.qrserver.com/v1/create-qr-code/?size=150×150&data="
-        + alipayDto.getAlipayTradePrecreateResponse().getQrCode();
+    if (alipayDto != null) {
+      return "https://api.qrserver.com/v1/create-qr-code/?size=150×150&data="
+              + alipayDto.getAlipayTradePrecreateResponse().getQrCode();
+    }else {
+      throw new AppException("400","返回为NULL");
+    }
   }
 
   /**
@@ -93,15 +98,15 @@ public class PayService {
 
     // 扩展信息，按需传入
     JSONObject extendParams = new JSONObject();
-    extendParams.put("sys_service_provider_id", SYSTEMSERVICEPROVIDER);
+    extendParams.put("sys_service_provider_id", SYSTEMS_CREVICE_PROVIDER);
     bizContent.put("extend_params", extendParams);
 
     // 营销信息，按需传入
     JSONObject promoParams = new JSONObject();
     promoParams.put("promo_params_key", DISCOUNT);
     bizContent.put("promo_params", promoParams);
-
     request.setBizContent(bizContent.toString());
+
     return request;
   }
 }

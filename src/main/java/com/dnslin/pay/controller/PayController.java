@@ -16,7 +16,7 @@ public class PayController {
   @PostMapping("/pay")
   /**
   *
-   * @Description:
+   * @Description: 订单接口
    * @param:
    * @return com.dnslin.pay.result.R
    * @author DnsLin
