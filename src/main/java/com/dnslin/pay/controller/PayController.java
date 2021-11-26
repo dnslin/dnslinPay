@@ -15,19 +15,19 @@ public class PayController {
 
   @PostMapping("/pay")
   /**
-  *
    * @Description: 订单接口
    * @param:
    * @return com.dnslin.pay.result.R
    * @author DnsLin
    * @date 2021/11/26 22:47
-  */
+   */
   public R payDmf(@RequestBody GoodsDto goodsDto) {
-      if (goodsDto != null){
-          String url = service.createOrder(goodsDto);
-      }else {
-          return new R("订单信息为空", null);
-      }
-      return new R(ResponseEnum.SUCCESS, null);
+    String url = "";
+    if (goodsDto != null) {
+      url = service.createOrder(goodsDto);
+    } else {
+      return new R("订单信息为空", null);
+    }
+    return new R(ResponseEnum.SUCCESS, url);
   }
 }
