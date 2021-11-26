@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  *
  *
- * @author: DnsLin @Title: GoodsDTO @ProjectName: dnslinPay @Description:
+ * @author: DnsLin @Title: GoodsDto @ProjectName: dnslinPay @Description:
  * @date: 2021/11/24 21:34
  */
 @Data
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @ToString
-public class GoodsDTO {
+public class GoodsDto {
 
   /**
    * 商品ID
@@ -56,4 +56,9 @@ public class GoodsDTO {
    * 折扣
    */
   private String discount;
+
+  /**
+   * 邮箱
+   */
+  private String email;
 }

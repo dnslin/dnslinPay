@@ -13,8 +13,7 @@ import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.dnslin.pay.config.AlipayConfig;
 import com.dnslin.pay.exception.AppException;
 import com.dnslin.pay.model.AlipayDto;
-import com.dnslin.pay.model.GoodsDTO;
-import com.dnslin.pay.result.ResponseEnum;
+import com.dnslin.pay.model.GoodsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,10 @@ public class PayService {
 
   @Autowired private AlipayConfig alipayConfig;
 
-  public String createOrder(GoodsDTO goodsDTO) throws AlipayApiException {
+  private final static String DISCOUNT = "10";
+
+  private final static String SYSTEMSERVICEPROVIDER= "2088511833207846";
+  public String createOrder(GoodsDto goodsDTO) throws AlipayApiException {
     AlipayClient alipayClient =
         new DefaultAlipayClient(
             alipayConfig.getServerUrl(),
@@ -47,7 +49,7 @@ public class PayService {
         + alipayDto.getAlipayTradePrecreateResponse().getQrCode();
   }
 
-  private AlipayTradePrecreateRequest getAlipayTradePrecreateRequest(GoodsDTO goodsDTO) {
+  private AlipayTradePrecreateRequest getAlipayTradePrecreateRequest(GoodsDto goodsDTO) {
     AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
     request.setNotifyUrl("");
     JSONObject bizContent = new JSONObject();
@@ -67,12 +69,12 @@ public class PayService {
 
     // 扩展信息，按需传入
     JSONObject extendParams = new JSONObject();
-    extendParams.put("sys_service_provider_id", "2088511833207846");
+    extendParams.put("sys_service_provider_id", SYSTEMSERVICEPROVIDER);
     bizContent.put("extend_params", extendParams);
 
     // 营销信息，按需传入
     JSONObject promoParams = new JSONObject();
-    promoParams.put("promo_params_key", "0.5折扣");
+    promoParams.put("promo_params_key", DISCOUNT);
     bizContent.put("promo_params", promoParams);
 
     request.setBizContent(bizContent.toString());
