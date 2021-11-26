@@ -21,4 +21,9 @@ public class R<T> {
         this.message = responseEnum.getMessage();
         this.data = data;
     }
+    public R(String message, T data) {
+        this.message = message;
+        this.data = data;
+    }
+
 }

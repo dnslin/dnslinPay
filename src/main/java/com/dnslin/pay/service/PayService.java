@@ -27,7 +27,10 @@ public class PayService {
   private final static String DISCOUNT = "10";
 
   private final static String SYSTEMSERVICEPROVIDER= "2088511833207846";
-  public String createOrder(GoodsDto goodsDTO) throws AlipayApiException {
+  public String createOrder(GoodsDto goodsDTO)  {
+    if (goodsDTO != null){
+      throw new AppException("400", "订单信息为空");
+    }
     AlipayClient alipayClient =
         new DefaultAlipayClient(
             alipayConfig.getServerUrl(),
@@ -38,7 +41,13 @@ public class PayService {
             alipayConfig.getAlipayPublicKey(),
             AlipayConfig.SIGN_TYPE);
     AlipayTradePrecreateRequest request = getAlipayTradePrecreateRequest(goodsDTO);
-    AlipayTradePrecreateResponse response = alipayClient.execute(request);
+    AlipayTradePrecreateResponse response = null;
+    try {
+      response = alipayClient.execute(request);
+    } catch (AlipayApiException e) {
+      e.printStackTrace();
+      throw new AppException(e.getErrMsg());
+    }
     if (response.isSuccess()) {
       log.info("调用成功");
     } else {
@@ -49,6 +58,14 @@ public class PayService {
         + alipayDto.getAlipayTradePrecreateResponse().getQrCode();
   }
 
+  /**
+  *
+   * @Description: 创建订单信息
+   * @param: goodsDTO
+   * @return AlipayTradePrecreateRequest
+   * @author DnsLin
+   * @date 2021/11/26 22:58
+  */
   private AlipayTradePrecreateRequest getAlipayTradePrecreateRequest(GoodsDto goodsDTO) {
     AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
     request.setNotifyUrl("");

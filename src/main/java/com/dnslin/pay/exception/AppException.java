@@ -1,9 +1,7 @@
 package com.dnslin.pay.exception;
 
 
-
 import com.dnslin.pay.result.ResponseEnum;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +23,9 @@ public class AppException extends RuntimeException{
     }
     public AppException(String code,String message){
         this.code = code;
+        this.message = message;
+    }
+    public AppException(String message){
         this.message = message;
     }
 }
