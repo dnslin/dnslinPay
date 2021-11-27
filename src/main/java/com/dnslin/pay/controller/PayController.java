@@ -37,7 +37,7 @@ public class PayController {
       url = service.createOrder(goodsDto);
     } else {
       log.error("订单实体类-->{}", goodsDto);
-      return new R("订单信息为空", null);
+      return new R("400", "订单信息为空");
     }
     return new R(ResponseEnum.SUCCESS, url);
   }

@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @Service
 public class PayService {
@@ -78,6 +80,9 @@ public class PayService {
    * @date 2021/11/26 22:58
    */
   private AlipayTradePrecreateRequest getAlipayTradePrecreateRequest(GoodsDto goodsDTO) {
+    if (goodsDTO.getPrice().compareTo(BigDecimal.valueOf(300)) != -1) {
+      throw new AppException("400", "金额数目过大");
+    }
     AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
     request.setNotifyUrl("");
     JSONObject bizContent = new JSONObject();
@@ -104,7 +109,6 @@ public class PayService {
     JSONObject extendParams = new JSONObject();
     extendParams.put("sys_service_provider_id", SYSTEMS_CREVICE_PROVIDER);
     bizContent.put("extend_params", extendParams);
-
     request.setBizContent(bizContent.toString());
     return request;
   }
