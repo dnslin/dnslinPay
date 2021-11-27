@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 // 创建统一的返回格式
@@ -25,5 +24,9 @@ public class R<T> {
         this.code = code;
         this.data = data;
     }
-
+    public R(String code,String message ,T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
 }

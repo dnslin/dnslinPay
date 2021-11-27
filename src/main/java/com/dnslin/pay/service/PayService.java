@@ -1,5 +1,6 @@
 package com.dnslin.pay.service;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +10,7 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.dnslin.pay.config.AlipayConfig;
+import com.dnslin.pay.config.Snowflake;
 import com.dnslin.pay.exception.AppException;
 import com.dnslin.pay.model.AlipayDto;
 import com.dnslin.pay.model.GoodsDto;
@@ -28,6 +30,7 @@ public class PayService {
 
   private static final String SYSTEMS_CREVICE_PROVIDER = "2088511833207846";
 
+  Snowflake snowflake = new Snowflake(0L, 0L);
   /**
    * @Description: 发送订单请求
    *
@@ -83,6 +86,10 @@ public class PayService {
     if (goodsDTO.getPrice().compareTo(BigDecimal.valueOf(300)) != -1) {
       throw new AppException("400", "金额数目过大");
     }
+    goodsDTO.setGoodName("CPU");
+    goodsDTO.setOutTradeNo(snowflake.nextId().toString());
+    goodsDTO.setGoodId(IdUtil.simpleUUID());
+    goodsDTO.setQuantity(5);
     AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
     request.setNotifyUrl("");
     JSONObject bizContent = new JSONObject();

@@ -95,13 +95,10 @@
             <artifactId>alipay-sdk-java</artifactId>
             <version>4.19.8.ALL</version>
         </dependency>
-
-
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>20030203.000129</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
         </dependency>
-
     </dependencies>
 </project>

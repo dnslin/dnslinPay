@@ -6,6 +6,7 @@ package com.dnslin.pay.config;
  * @Description:
  * @date: 2021/11/27 15:19
  */
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,46 +24,46 @@ import java.util.Set;
 public class Snowflake {
   // ==============================Fields===========================================
   /** 开始时间截 (2018-07-03) */
-  private final long twepoch = 1530607760000L;
+  private final Long twepoch = 1530607760000L;
 
   /** 机器id所占的位数 */
-  private final long workerIdBits = 5L;
+  private final Long workerIdBits = 5L;
 
   /** 数据标识id所占的位数 */
-  private final long datacenterIdBits = 5L;
+  private final Long datacenterIdBits = 5L;
 
   /** 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数) */
-  private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
+  private final Long maxWorkerId = -1L ^ (-1L << workerIdBits);
 
   /** 支持的最大数据标识id，结果是31 */
-  private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
+  private final Long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
 
   /** 序列在id中占的位数 */
-  private final long sequenceBits = 12L;
+  private final Long sequenceBits = 12L;
 
   /** 机器ID向左移12位 */
-  private final long workerIdShift = sequenceBits;
+  private final Long workerIdShift = sequenceBits;
 
   /** 数据标识id向左移17位(12+5) */
-  private final long datacenterIdShift = sequenceBits + workerIdBits;
+  private final Long datacenterIdShift = sequenceBits + workerIdBits;
 
   /** 时间截向左移22位(5+5+12) */
-  private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
+  private final Long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
 
   /** 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095) */
-  private final long sequenceMask = -1L ^ (-1L << sequenceBits);
+  private final Long sequenceMask = -1L ^ (-1L << sequenceBits);
 
   /** 工作机器ID(0~31) */
-  private long workerId;
+  private Long workerId;
 
   /** 数据中心ID(0~31) */
-  private long datacenterId;
+  private Long datacenterId;
 
   /** 毫秒内序列(0~4095) */
-  private long sequence = 0L;
+  private Long sequence = 0L;
 
   /** 上次生成ID的时间截 */
-  private long lastTimestamp = -1L;
+  private Long lastTimestamp = -1L;
 
   // ==============================Constructors=====================================
 
@@ -72,7 +73,7 @@ public class Snowflake {
    * @param workerId 工作ID (0~31)
    * @param datacenterId 数据中心ID (0~31)
    */
-  public Snowflake(long workerId, long datacenterId) {
+  public Snowflake(Long workerId, Long datacenterId) {
     if (workerId > maxWorkerId || workerId < 0) {
       throw new IllegalArgumentException(
           String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
@@ -89,7 +90,7 @@ public class Snowflake {
    *
    * @return SnowflakeId
    */
-  public synchronized long nextId() {
+  public synchronized Long nextId() {
     long timestamp = timeGen();
 
     // 如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
@@ -152,7 +153,7 @@ public class Snowflake {
   /** 测试 */
   public static void main(String[] args) {
     long startTime = System.currentTimeMillis();
-    Snowflake idWorker = new Snowflake(0, 0);
+    Snowflake idWorker = new Snowflake(0L, 0L);
     Set set = new HashSet();
     for (int i = 0; i < 10000000; i++) {
       long id = idWorker.nextId();
