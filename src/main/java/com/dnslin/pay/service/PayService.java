@@ -92,7 +92,7 @@ public class PayService {
     goodsDTO.setGoodId(IdUtil.simpleUUID());
     goodsDTO.setQuantity(5);
     AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
-    request.setNotifyUrl("");
+    request.setNotifyUrl(alipayConfig.getNotifyUrl());
     JSONObject bizContent = new JSONObject();
     bizContent.put("out_trade_no", goodsDTO.getOutTradeNo());
     bizContent.put("total_amount", goodsDTO.getPrice());
