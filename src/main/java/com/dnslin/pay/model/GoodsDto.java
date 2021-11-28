@@ -61,4 +61,10 @@ public class GoodsDto {
    * 邮箱
    */
   private String email;
+
+
+  /**
+   * other
+   */
+  private String other;
 }

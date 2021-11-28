@@ -6,7 +6,7 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.dnslin.pay.config.AlipayConfig;
 import com.dnslin.pay.model.GoodsDto;
 import com.dnslin.pay.result.R;
-import com.dnslin.pay.result.ResponseEnum;
+import com.dnslin.pay.service.MallService;
 import com.dnslin.pay.service.PayService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +26,7 @@ public class PayController {
 
   @Autowired private AlipayConfig config;
 
+  @Autowired private MallService mallService;
   @PostMapping("/pay")
   /**
    * @Description: 订单接口
@@ -46,7 +47,8 @@ public class PayController {
           String regex = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
           boolean matches = goodsDto.getEmail().matches(regex);
           if (matches) {
-            url = service.createOrder(goodsDto);
+            url = service.createOrder(goodsDto).getOther();
+            msg = mallService.senderMail(goodsDto);
           } else {
             log.error("邮箱格式错误");
             msg = "邮箱格式错误";
@@ -54,18 +56,18 @@ public class PayController {
           }
         } else {
           log.error("邮箱为空");
-          msg = "邮箱信息为空不发送通知邮件";
+          msg = "邮箱信息为空,不发送通知邮件";
           throw new IllegalStateException();
         }
       } catch (Exception e) {
-        url = service.createOrder(goodsDto);
+        url = service.createOrder(goodsDto).getOther();
         return new R("201", msg, url);
       }
     } else {
       log.error("订单实体类-->{}", goodsDto);
       return new R("400", "订单信息为空", null);
     }
-    return new R(ResponseEnum.SUCCESS, url);
+    return new R("202",msg,url);
   }
 
   @PostMapping("/notify")

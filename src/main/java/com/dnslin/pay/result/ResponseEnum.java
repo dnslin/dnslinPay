@@ -3,6 +3,7 @@ package com.dnslin.pay.result;
 public enum ResponseEnum {
 
     SUCCESS("200","成功003"),
+    SUCCESS_MAIL("202","订单生成成功,邮件发送成功"),
     USERNAME_NOT_FOUND("300","用户名不存在"),
     USERNAME_OR_PASSWORD_INVALIDATE("301","用户名或者密码错误"),
     ROLE_NO_MENUS("302","此角色没有任何菜单权限，请尽早分配"),

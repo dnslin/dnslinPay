@@ -39,7 +39,7 @@ public class PayService {
    * @author DnsLin
    * @date 2021/11/26 22:58
    */
-  public String createOrder(GoodsDto goodsDTO) {
+  public GoodsDto createOrder(GoodsDto goodsDTO) {
     if (goodsDTO == null) {
       throw new AppException("400", "订单信息为空");
     }
@@ -68,7 +68,8 @@ public class PayService {
     }
     AlipayDto alipayDto = JSON.parseObject(response.getBody(), AlipayDto.class);
     if (alipayDto != null) {
-      return alipayDto.getAlipayTradePrecreateResponse().getQrCode();
+      goodsDTO.setOther(alipayDto.getAlipayTradePrecreateResponse().getQrCode());
+      return goodsDTO;
     } else {
       throw new AppException("400", "返回为NULL");
     }
